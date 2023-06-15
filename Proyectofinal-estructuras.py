@@ -69,12 +69,13 @@ class GUI:
         texto5 = "Aero 5"
         self.crear_circulo(pos_x, pos_y, color, texto5)
         
-        self.crear_linea(texto1,texto2,300,40)
-        self.crear_linea(texto2,texto3,300,40)
-        self.crear_linea(texto3,texto1,300,40)
-        self.crear_linea(texto4,texto2,300,40)
-        self.crear_linea(texto1,texto4,300,40)
-        self.crear_linea(texto5,texto3,300,40)
+        self.crear_linea(texto1,texto2,300.0,40.0)
+        self.crear_linea(texto2,texto3,300.0,40.0)
+        self.crear_linea(texto3,texto1,300.0,40.0)
+        self.crear_linea(texto4,texto2,300.0,40.0)
+        self.crear_linea(texto1,texto4,300.0,40.0)
+        self.crear_linea(texto5,texto3,300.0,40.0)
+        
         CrearA= Button(self.ventana, text="Agregar Aeropuerto", command=self.open_form)
         CrearA.pack(side='left', padx=5)
         BuscarA= Button(self.ventana, text="Buscar Aeropuerto", command=self.Buscar_Aero)
@@ -185,65 +186,68 @@ class GUI:
             x2 =int(self.grafo.nodes[nombre2]['x'])
             y2 =int(self.grafo.nodes[nombre2]['y'])
         self.cambiar_color_trayecto(x2,x1,y2,y1)
-    def suma (self,duraccion, distancia):
-        self.duracion=self.duracion+duraccion
-        self.distancia= self.distancia+distancia
+    def suma (self,duracion, distancia):
+        duracion=int(duracion)
+        distancia=int(distancia)
+        x=int(self.duracion)
+        z=int(self.distancia)
+        self.duracion=x+duracion
+        self.distancia=z+distancia
     def señalar_trayecto(self,origen,origen1,destino, final):# cambia el color de la linea de trayecto para asi identificarla
         valor=True
         if self.grafo.has_edge(origen, destino)==False:
             trayectos = [(origen, destino1) for destino1 in self.grafo.neighbors(origen)]
             for trayecto in trayectos:
-                for trayecto in trayectos:
-                    if self.grafo.has_edge(trayecto[1], final):
-                        self.contenido(trayecto[1], final)
-                        datos_arista = self.grafo.get_edge_data(trayecto[1], final)
-                        self.suma(datos_arista['duracion'], datos_arista['distancia'])
-                        self.contenido(trayecto[0],trayecto[1])
-                        datos_arista = self.grafo.get_edge_data(trayecto[0],trayecto[1])
-                        self.suma(datos_arista['duracion'], datos_arista['distancia'])
+                for trayecto1 in trayectos:
+                    if self.grafo.has_edge(trayecto1[1], final):
+                        self.contenido(trayecto1[1], final)
+                        datos_arista = self.grafo.get_edge_data(trayecto1[1], final)
+                        self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                        self.contenido(trayecto1[0],trayecto1[1])
+                        datos_arista = self.grafo.get_edge_data(trayecto1[0],trayecto1[1])
+                        self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
                         valor=False
                         return None
-                
                 if(valor):
                     trayectos2 = [(trayecto[1], destino2) for destino2 in self.grafo.neighbors(trayecto[1])]
                     for trayecto2 in trayectos2:
-                        for trayecto2 in trayectos2:
-                            if self.grafo.has_edge(trayecto2[1], final):
-                                self.contenido(trayecto2[1], final)
-                                datos_arista = self.grafo.get_edge_data(trayecto2[1], final)
-                                self.suma(datos_arista['duracion'], datos_arista['distancia'])
-                                self.contenido(trayecto2[0],trayecto2[1])
-                                datos_arista = self.grafo.get_edge_data(trayecto2[0],trayecto2[1])
-                                self.suma(datos_arista['duracion'], datos_arista['distancia'])
+                        for trayecto4 in trayectos2:
+                            if self.grafo.has_edge(trayecto4[1], final):
+                                self.contenido(trayecto4[1], final)
+                                datos_arista = self.grafo.get_edge_data(trayecto4[1], final)
+                                self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                                self.contenido(trayecto4[0],trayecto4[1])
+                                datos_arista = self.grafo.get_edge_data(trayecto4[0],trayecto2[1])
+                                self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
                                 self.contenido(trayecto[0],trayecto[1])
                                 datos_arista = self.grafo.get_edge_data(trayecto[0],trayecto[1])
-                                self.suma(datos_arista['duracion'], datos_arista['distancia'])
+                                self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
                                 valor=False
                                 return None
-                        if(trayecto2[1]==final):
+                        if(trayecto2[1]==final and valor):
                             self.contenido(trayecto2[0],trayecto2[1])
                             datos_arista = self.grafo.get_edge_data(trayecto2[0],trayecto2[1])
-                            self.suma(datos_arista['duracion'], datos_arista['distancia'])
+                            self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
                             return trayecto2[0]
                         else:
                             if(trayecto2[0]!=origen and trayecto2[1]!=origen and trayecto2[0]!=origen1 and trayecto2[1]!=origen1 ):
-                                trayecto3=self.señalar_trayecto(trayecto2[0],origen1,final,final)
+                                trayecto3=self.señalar_trayecto(trayecto2[1],origen1,final,final)
                                 if self.grafo.has_edge(origen1, trayecto3):
                                     self.contenido(origen1,trayecto3)
                                     datos_arista = self.grafo.get_edge_data(origen1,trayecto3)
-                                    self.suma(datos_arista['duracion'], datos_arista['distancia'])
+                                    self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
                                     return None
                                 else:
                                     self.contenido(trayecto2[0],trayecto2[1])
                                     datos_arista = self.grafo.get_edge_data(trayecto2[0],trayecto2[1])
-                                    self.suma(datos_arista['duracion'], datos_arista['distancia'])
+                                    self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
             self.contenido(trayecto[0],trayecto[1])
             datos_arista = self.grafo.get_edge_data(trayecto[0],trayecto[1])
-            self.suma(datos_arista['duracion'], datos_arista['distancia'])
+            self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
         else:
             self.contenido(origen, destino)
             datos_arista = self.grafo.get_edge_data(origen, destino)
-            self.suma(datos_arista['duracion'], datos_arista['distancia'])
+            self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
 
     def cerrar(self):#cierra el panel ademas de volver el aero puerto a su color original
         self.canvas.itemconfig(self.numero, fill=self.color_original)
@@ -342,13 +346,16 @@ class GUI:
         for circulo in self.circulos:
             if self.canvas.coords(circulo)[0] == x:
                 self.canvas.delete(circulo)
+                self.circulos.remove(circulo)
         
         for texto in self.Textos:
             if self.canvas.itemcget(texto, "text") == nombre:
                 self.canvas.delete(texto)
+                self.Textos.remove(texto)
         for linea in self.lineas:
             if self.canvas.coords(linea)[0] == x1 or self.canvas.coords(linea)[2] == x1:
                 self.canvas.delete(linea)
+                self.lineas.remove(linea)
         self.formulario.destroy()
 
     def eliminar_lineas(self):
@@ -363,6 +370,7 @@ class GUI:
             print(self.canvas.coords(linea)[0],x1,self.canvas.coords(linea)[2],x2)
             if self.canvas.coords(linea)[0] == x1 and self.canvas.coords(linea)[2] == x2:
                 self.canvas.delete(linea)
+                self.lineas.remove(linea)
         
         self.formulario.destroy()
         
@@ -404,8 +412,8 @@ class GUI:
     def add_trayecto(self):# es donde se comparan los datos a ver si son correctos
         origen=self.nombre_origen
         destino=self.nombre_destino
-        duracion = self.duracion.get()
-        distancia = self.duracion.get()
+        duracion = int(self.duracion.get())
+        distancia = int(self.duracion.get())
 
         if(origen==destino or duracion=='' or distancia==''):
             self.show_error_window("Llene el formulario correctamente")# abre la ventada de error con el mensaje que tiene dentro
@@ -413,7 +421,8 @@ class GUI:
             if self.grafo.has_edge(origen, destino):
                 self.show_error_window("Ya existe un trayecto entre los aeropuertos seleccionados")  # muestra error si el trayecto ya existe en el grafo
             else:
-                self.grafo.add_edge(origen, destino, duracion=duracion, distancia=distancia)  # agregar una arista entre los nodos de origen y destino en el grafo
+                duracion=int(duracion)
+                distancia= int(distancia)
                 self.crear_linea(origen, destino, duracion, distancia)
                 self.formulario.destroy()
     
@@ -484,14 +493,19 @@ class GUI:
         self.grafo.nodes[name]['x'] = x  # Guardar la posición X del aeropuerto en el atributo 'x' del nodo correspondiente en el grafo
         self.grafo.nodes[name]['y'] = y  # Guardar la posición Y del aeropuerto en el atributo 'y' del nodo correspondiente en el grafo
         self.lista_Nombres.append(name)
-    def crear_linea(self,origen, destino, duracion, distancia):# crea las lineas de trayecto
+    def crear_linea(self,origen, destino, duracion, distancia):
+        # crea las lineas de trayecto
+        if not isinstance(duracion, float) or not isinstance(distancia, float):
+            raise TypeError('La duración y la distancia deben ser datos numéricos de tipo Float')
         x = self.grafo.nodes[origen]['x']
         y = self.grafo.nodes[origen]['y']
         x2 = self.grafo.nodes[destino]['x']
         y2 = self.grafo.nodes[destino]['y']
         linea = self.canvas.create_line(x, y, x2, y2, fill="black")
-        self.grafo.add_edge(origen, destino, duracion=duracion, distancia=distancia)#Agregar una arista entre los nodos de origen y destino en el grafo
-        self.grafo.add_edge(destino, origen, duracion=duracion, distancia=distancia)
+        x=int(duracion)
+        y=int(distancia)
+        self.grafo.add_edge(origen, destino, duracion=x, distancia=y)#Agregar una arista entre los nodos de origen y destino en el grafo
+        self.grafo.add_edge(destino, origen, duracion=x, distancia=y)
         self.lineas.append(linea)
         nombre_trayecto=origen+"-"+destino
         self.lista_Nombres_Trayectos.append(nombre_trayecto)
@@ -541,10 +555,10 @@ class GUI:
             y2=self.canvas.coords(linea)[3]
             print(self.canvas.coords(linea)[0],x1)
             print(self.canvas.coords(linea)[2],x2)
-            if(self.canvas.coords(linea)[0]==x0+30):
+            if(self.canvas.coords(linea)[0]==x0):
                 self.canvas.coords(linea,x+30,y+30,x2,y2)
                 self.formulario.destroy()
-            if(self.canvas.coords(linea)[2]==x0+30):
+            if(self.canvas.coords(linea)[2]==x0):
                 self.canvas.coords(linea,x3,y3,x+30,y+30)
                 self.formulario.destroy()
 
