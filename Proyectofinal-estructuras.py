@@ -35,46 +35,6 @@ class GUI:
         scrollbar = Scrollbar(self.ventana, orient='vertical', command=self.canvas.yview)
         scrollbar.pack(side='right', fill="y")
         self.canvas.config(yscrollcommand=scrollbar.set)
-
-        #aero puerto inicial
-        color = "blue"
-        pos_x = self.canvas_width // 2
-        pos_y = self.canvas_height // 2
-        texto1 = "Aerop 1"
-        
-        self.crear_circulo(pos_x, pos_y, color, texto1)
-        
-        color = "orange"
-        pos_x =300
-        pos_y = 100
-        texto2 = "Aero 2"
-        
-        self.crear_circulo(pos_x, pos_y, color, texto2)
-        
-        color = "black"
-        pos_x = 302
-        pos_y = 302
-        texto3 = "Aero 3"
-        self.crear_circulo(pos_x, pos_y, color, texto3)
-        
-        color = "black"
-        pos_x = 700
-        pos_y = 103
-        texto4 = "Aero 4"
-        self.crear_circulo(pos_x, pos_y, color, texto4)
-        
-        color = "black"
-        pos_x = 701
-        pos_y = 303
-        texto5 = "Aero 5"
-        self.crear_circulo(pos_x, pos_y, color, texto5)
-        
-        self.crear_linea(texto1,texto2,300.0,40.0)
-        self.crear_linea(texto2,texto3,300.0,40.0)
-        self.crear_linea(texto3,texto1,300.0,40.0)
-        self.crear_linea(texto4,texto2,300.0,40.0)
-        self.crear_linea(texto1,texto4,300.0,40.0)
-        self.crear_linea(texto5,texto3,300.0,40.0)
         
         CrearA= Button(self.ventana, text="Agregar Aeropuerto", command=self.open_form)
         CrearA.pack(side='left', padx=5)
@@ -112,7 +72,7 @@ class GUI:
         letrero.pack()
         
         opciones = StringVar(self.panel)
-        opciones.set(lista[0])
+        opciones.set("ninguno")
         opcion_menu = OptionMenu(self.panel, opciones, *lista, command=seleccionar_origen)# menu de opciones de origen
         opcion_menu.pack()#primera opcion
         
@@ -297,7 +257,7 @@ class GUI:
         letrero.pack()
         
         self.aeropuerto_seleccionado = StringVar(self.formulario)
-        self.aeropuerto_seleccionado.set(lista[0])  # primera opción
+        self.aeropuerto_seleccionado.set("ninguno")  # primera opción
         opcion_menu = OptionMenu(self.formulario, self.aeropuerto_seleccionado, *lista,command=seleccionar_origen)
         opcion_menu.pack()
 
@@ -313,7 +273,7 @@ class GUI:
         letrero.pack()
         
         self.origen_seleccionado = StringVar(self.formulario)
-        self.origen_seleccionado.set(lista[0])  # primera opción
+        self.origen_seleccionado.set("ninguno")  # primera opción
         opcion_menu_origen = OptionMenu(self.formulario, self.origen_seleccionado, *lista, command=seleccionar_origen)
         opcion_menu_origen.pack()
         
@@ -321,7 +281,7 @@ class GUI:
         letrero.pack() 
 
         self.destino_seleccionado = StringVar(self.formulario)
-        self.destino_seleccionado.set(lista[0])  # primera opción
+        self.destino_seleccionado.set("ninguno")  # primera opción
         opcion_menu_destino = OptionMenu(self.formulario, self.destino_seleccionado, *lista, command=seleccionar_destino)
         opcion_menu_destino.pack()
 
@@ -352,7 +312,7 @@ class GUI:
             if self.canvas.coords(circulo)[0] == x:
                 self.canvas.delete(circulo)
                 self.circulos.remove(circulo)
-        
+                self.lista_Nombres.remove(nombre)
         for texto in self.Textos:
             if self.canvas.itemcget(texto, "text") == nombre:
                 self.canvas.delete(texto)
@@ -388,7 +348,7 @@ class GUI:
         letrero.pack()
         
         opciones_origen = StringVar(self.formulario)
-        opciones_origen.set(lista[0])
+        opciones_origen.set("ninguno")
         opcion_menu_origen = OptionMenu(self.formulario, opciones_origen, *lista, command=seleccionar_origen)  # menú de opciones de origen
         opcion_menu_origen.pack()  # primera opción
         
@@ -396,7 +356,7 @@ class GUI:
         letrero2.pack()
         
         opciones_destino = StringVar(self.formulario)
-        opciones_destino.set(lista[0])  # primera opción
+        opciones_destino.set("ninguno")  # primera opción
     
         opcion_menu_destino = OptionMenu(self.formulario, opciones_destino, *lista, command=seleccionar_destino)# menu de opciones de destino
         opcion_menu_destino.pack()
@@ -454,7 +414,7 @@ class GUI:
         color_label.pack()
         Colores = ["blue", "yellow", "orange", "purple", "green", "grey", "black"]  # lista de colores que puede utilizar el usuario
         self.color = StringVar(self.form_window)
-        self.color.set(Colores[0])  # primera opción
+        self.color.set("ninguno")  # primera opción
         opcion_color = OptionMenu(self.form_window, self.color, *Colores)
         opcion_color.pack()
 
@@ -620,7 +580,7 @@ class GUI:
         opcion_menu.pack()
         
         opciones = StringVar(self.formulario)
-        opciones.set('ninguno')#primera opcion formulario destinos
+        opciones.set('Ninguno')#primera opcion formulario destinos
         opcion_menu = OptionMenu(self.formulario, opciones, *lista, command=seleccionar_destino)# menu de opciones de los aeropuertos de destino disponibles
         opcion_menu.pack()
 
