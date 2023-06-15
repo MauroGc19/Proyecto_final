@@ -19,8 +19,8 @@ class GUI:
         self.lista_Nombres=[]
         self.lista_Cambiar=[]
         self.lista_Nombres_Trayectos=[]
-        self.duracion = 0
-        self.distancia = 0    
+        self.duracion_final = 0
+        self.distancia_final = 0     
         self.circulos=[]# lista donde se guardan los circulos del cambas
         self.lineas=[ ]#lista donde se guardan las lineas del cambas
         self.Textos=[]#Guarda los textos de los aeropuertos
@@ -169,14 +169,20 @@ class GUI:
         destino1=self.nombre_destino
         destino2=self.nombre_destino
         self.señalar_trayecto(origen,origen1,destino1,destino2)
-        letrero3= Label(self.formulario, text="Duracion")
+        y= self.duracion_final/self.distancia_final
+        letrero3= Label(self.formulario, text="peso final")
         letrero3.pack()
-        letrero3= Label(self.formulario, text=self.duracion)
+        letrero3= Label(self.formulario, text=y)
         letrero3.pack()
-        letrero3= Label(self.formulario, text="Distancia")
+        letrero3= Label(self.formulario, text="distancia")
         letrero3.pack()
-        letrero3= Label(self.formulario, text=self.distancia)
+        letrero3= Label(self.formulario, text=self.duracion_final)
         letrero3.pack()
+        letrero3= Label(self.formulario, text="duraccion")
+        letrero3.pack()
+        letrero3= Label(self.formulario, text=self.distancia_final)
+        letrero3.pack()
+    
         
     def contenido(self, nombre1, nombre2):
         if nombre1 in self.grafo:
@@ -189,10 +195,8 @@ class GUI:
     def suma (self,duracion, distancia):
         duracion=int(duracion)
         distancia=int(distancia)
-        x=int(self.duracion)
-        z=int(self.distancia)
-        self.duracion=x+duracion
-        self.distancia=z+distancia
+        self.duracion_final=self.duracion_final+duracion
+        self.distancia_final=self.distancia_final+distancia
     def señalar_trayecto(self,origen,origen1,destino, final):# cambia el color de la linea de trayecto para asi identificarla
         valor=True
         if self.grafo.has_edge(origen, destino)==False:
@@ -211,23 +215,23 @@ class GUI:
                 if(valor):
                     trayectos2 = [(trayecto[1], destino2) for destino2 in self.grafo.neighbors(trayecto[1])]
                     for trayecto2 in trayectos2:
-                        for trayecto4 in trayectos2:
+                        for trayecto4 in trayecto2:
                             if self.grafo.has_edge(trayecto4[1], final):
                                 self.contenido(trayecto4[1], final)
                                 datos_arista = self.grafo.get_edge_data(trayecto4[1], final)
-                                self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                                self.suma(datos_arista['duracion'], datos_arista['distancia'])
                                 self.contenido(trayecto4[0],trayecto4[1])
                                 datos_arista = self.grafo.get_edge_data(trayecto4[0],trayecto2[1])
-                                self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                                self.suma(datos_arista['duracion'], datos_arista['distancia'])
                                 self.contenido(trayecto[0],trayecto[1])
                                 datos_arista = self.grafo.get_edge_data(trayecto[0],trayecto[1])
-                                self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                                x=self.suma(datos_arista['duracion'], datos_arista['distancia'])
                                 valor=False
                                 return None
                         if(trayecto2[1]==final and valor):
                             self.contenido(trayecto2[0],trayecto2[1])
                             datos_arista = self.grafo.get_edge_data(trayecto2[0],trayecto2[1])
-                            self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                            self.suma(datos_arista['duracion'], datos_arista['distancia'])
                             return trayecto2[0]
                         else:
                             if(trayecto2[0]!=origen and trayecto2[1]!=origen and trayecto2[0]!=origen1 and trayecto2[1]!=origen1 ):
@@ -235,20 +239,21 @@ class GUI:
                                 if self.grafo.has_edge(origen1, trayecto3):
                                     self.contenido(origen1,trayecto3)
                                     datos_arista = self.grafo.get_edge_data(origen1,trayecto3)
-                                    self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                                    x=self.suma(datos_arista['duracion'], datos_arista['distancia'])
                                     return None
                                 else:
                                     self.contenido(trayecto2[0],trayecto2[1])
                                     datos_arista = self.grafo.get_edge_data(trayecto2[0],trayecto2[1])
-                                    self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+                                    self.suma(datos_arista['duracion'], datos_arista['distancia'])
             self.contenido(trayecto[0],trayecto[1])
             datos_arista = self.grafo.get_edge_data(trayecto[0],trayecto[1])
-            self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
+            self.suma(datos_arista['duracion'], datos_arista['distancia'])
         else:
             self.contenido(origen, destino)
             datos_arista = self.grafo.get_edge_data(origen, destino)
-            self.suma(int(datos_arista['duracion']), datos_arista['distancia'])
-
+            x=self.suma(datos_arista['duracion'], datos_arista['distancia'])
+            return None
+        
     def cerrar(self):#cierra el panel ademas de volver el aero puerto a su color original
         self.canvas.itemconfig(self.numero, fill=self.color_original)
         self.panel.destroy()
@@ -256,8 +261,8 @@ class GUI:
     def cerrar_trayecto(self):#cierra el panel ademas de volver el trayecto a su color original
         for linea in self.lista_Cambiar:
             self.canvas.itemconfig(linea, fill="black")
-            self.duracion=0
-            self.distancia=0
+            self.duracion_final=0
+            self.distancia_final=0
             self.formulario.destroy()
             
 
@@ -412,8 +417,8 @@ class GUI:
     def add_trayecto(self):# es donde se comparan los datos a ver si son correctos
         origen=self.nombre_origen
         destino=self.nombre_destino
-        duracion = int(self.duracion.get())
-        distancia = int(self.duracion.get())
+        duracion = float(self.duracion.get())
+        distancia = float(self.duracion.get())
 
         if(origen==destino or duracion=='' or distancia==''):
             self.show_error_window("Llene el formulario correctamente")# abre la ventada de error con el mensaje que tiene dentro
@@ -421,8 +426,8 @@ class GUI:
             if self.grafo.has_edge(origen, destino):
                 self.show_error_window("Ya existe un trayecto entre los aeropuertos seleccionados")  # muestra error si el trayecto ya existe en el grafo
             else:
-                duracion=int(duracion)
-                distancia= int(distancia)
+                duracion=float(duracion)
+                distancia= float(distancia)
                 self.crear_linea(origen, destino, duracion, distancia)
                 self.formulario.destroy()
     
@@ -502,10 +507,8 @@ class GUI:
         x2 = self.grafo.nodes[destino]['x']
         y2 = self.grafo.nodes[destino]['y']
         linea = self.canvas.create_line(x, y, x2, y2, fill="black")
-        x=int(duracion)
-        y=int(distancia)
-        self.grafo.add_edge(origen, destino, duracion=x, distancia=y)#Agregar una arista entre los nodos de origen y destino en el grafo
-        self.grafo.add_edge(destino, origen, duracion=x, distancia=y)
+        self.grafo.add_edge(origen, destino, duracion=duracion, distancia=distancia)#Agregar una arista entre los nodos de origen y destino en el grafo
+        self.grafo.add_edge(destino, origen, duracion=duracion, distancia=distancia)
         self.lineas.append(linea)
         nombre_trayecto=origen+"-"+destino
         self.lista_Nombres_Trayectos.append(nombre_trayecto)
