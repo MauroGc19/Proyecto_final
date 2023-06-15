@@ -219,8 +219,9 @@ class GUI:
             self.eliminar_circulos(x, nombre)
   
     
-    def eliminar_circulos(self, x, nombre):
-        x =int(x-30)
+    def eliminar_circulos(self, ubicacion, nombre):
+        x =int(ubicacion-30)
+        x1=ubicacion
         for circulo in self.circulos:
             if self.canvas.coords(circulo)[0] == x:
                 self.canvas.delete(circulo)
@@ -228,7 +229,10 @@ class GUI:
         for texto in self.Textos:
             if self.canvas.itemcget(texto, "text") == nombre:
                 self.canvas.delete(texto)
-        
+                
+        for linea in self.lineas:
+            if self.canvas.coords(linea)[0] == x1 or self.canvas.coords(linea)[2] == x1:
+                self.canvas.delete(linea)
         self.formulario.destroy()
 
     def eliminar_lineas(self):
